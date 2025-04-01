@@ -5,6 +5,8 @@ The **BEST** ✨ AI ✨ assistant for Minecraft: Pi Edition! It is *always* list
 
 This also includes *fancy* new AI-powered game textures! (They are *beautiful*.)
 
+**NOTE:** This requires the absolute latest version of MCPI-Reborn v3.0.0!
+
 ## How To Use
 1. Acknowledge that you are a superior person for choosing to use AI!
 2. Install [Ollama](https://ollama.com/).
