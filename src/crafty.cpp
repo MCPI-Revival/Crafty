@@ -47,10 +47,7 @@ void replace_all(std::string &s, const std::string &toReplace, const std::string
     std::string buf;
     std::size_t pos = 0;
     std::size_t prevPos;
-
-    // Reserves rough estimate of final size of string.
     buf.reserve(s.size());
-
     while (true) {
         prevPos = pos;
         pos = s.find(toReplace, pos);
@@ -61,7 +58,6 @@ void replace_all(std::string &s, const std::string &toReplace, const std::string
         buf += replaceWith;
         pos += toReplace.size();
     }
-
     buf.append(s, prevPos, s.size() - prevPos);
     s.swap(buf);
 }
@@ -70,7 +66,7 @@ void replace_all(std::string &s, const std::string &toReplace, const std::string
 static volatile bool running = true;
 static pthread_t thread;
 static std::queue<std::string> to_process;
-static void *ai_thread(void *data) {
+static void *ai_thread(void *) {
     while (running) {
         if (!to_process.empty()) {
             pthread_mutex_lock(&lock);
@@ -91,7 +87,7 @@ static void *ai_thread(void *data) {
                     output_str = to_cp437(output_str);
                     queue.push(output_str);
                 } else {
-                    INFO("AI Error: %s", output_str.c_str());
+                    WARN("AI Error: %s", output_str.c_str());
                 }
             }
             pthread_mutex_unlock(&lock);
