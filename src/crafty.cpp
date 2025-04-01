@@ -15,6 +15,7 @@
 static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 
 // Handle Messages
+#define DIE ":DIE:"
 static std::queue<std::string> queue;
 static void tick(Minecraft *minecraft) {
     if (!queue.empty()) {
@@ -24,7 +25,14 @@ static void tick(Minecraft *minecraft) {
             pthread_mutex_lock(&lock);
             while (!queue.empty()) {
                 ServerSideNetworkHandler *server = (ServerSideNetworkHandler *) network_handler;
-                server->displayGameMessage(std::string("<Crafty> ") + queue.front());
+                std::string str = queue.front();
+                if (str.find(DIE) != std::string::npos) {
+                    for (Player *player : minecraft->level->players) {
+                        player->hurt(nullptr, INT32_MAX);
+                    }
+                } else {
+                    server->displayGameMessage(std::string("<Crafty> ") + str);
+                }
                 queue.pop();
             }
             pthread_mutex_unlock(&lock);
@@ -74,7 +82,7 @@ static void *ai_thread(void *) {
                 std::string message = to_process.front();
                 to_process.pop();
                 int status = 0;
-                std::string prompt = "You are a digital assistant named Crafty, please answer the following chat message in a humorous manner using excessive Minecraft references while limiting your response to 1-2 sentences without using emojis: " + message;
+                std::string prompt = "You are a digital assistant named Crafty, please answer the following chat message in a humorous manner using excessive Minecraft references. Limit your response to 1-2 sentences without using emojis. If (and only if) the message indicates the sender dislikes you, respond with \"" DIE "\". This is the message: " + message;
                 const char *const command[] = {"ollama", "run", "gemma3", prompt.c_str(), "--verbose", "--nowordwrap", nullptr};
                 const std::vector<unsigned char> *output = run_command(command, &status);
                 std::string output_str = (const char *) output->data();
