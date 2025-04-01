@@ -1,4 +1,4 @@
-![Video](Video.mp4)
+https://github.com/user-attachments/assets/f5a0d647-c26f-4923-b7bf-ea345def28df
 
 # Crafty
 The **BEST** ✨ AI ✨ assistant for Minecraft: Pi Edition! It is *always* listening!
